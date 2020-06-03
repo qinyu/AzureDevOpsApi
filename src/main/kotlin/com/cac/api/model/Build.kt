@@ -3,6 +3,7 @@ package com.cac.api.model
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 data class Build(var buildNumber: String,
                  var status: String,
                  var result: String,
@@ -11,12 +12,21 @@ data class Build(var buildNumber: String,
                  var finishTime: String,
                  var url: String) {
 
-    constructor(result: String, startTime: String,
-                finishTime: String) : this("", "", result, "", startTime, finishTime, "")
+    constructor(buildNumber: String, result: String, startTime: String,
+                finishTime: String) : this(buildNumber, "", result, "", startTime, finishTime, "")
 
-    fun getData(time: String): Long {
+    private fun getDataFromUTC(time: String): Long {
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         val date: Date = format.parse(time) //注意是空格+UTC
         return date.time
+    }
+
+
+    fun getStartTime(): Long {
+        return getDataFromUTC(startTime)
+    }
+
+    fun getFinishTime(): Long {
+        return getDataFromUTC(finishTime)
     }
 }

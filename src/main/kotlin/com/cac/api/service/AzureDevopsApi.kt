@@ -54,11 +54,19 @@ class AzureDevopsApi {
     }
 
     @ResponseBody
+    @RequestMapping("/build/mttr")
+    fun getMTTR(param: Params): String {
+        var azureBuildLogic = AzureBuildLogic(getDataModel(param))
+        return azureBuildLogic.getRecoveryTime().toString()
+    }
+
+    @ResponseBody
     @RequestMapping("/build")
     fun getBuild(param: Params): String {
         var duration = getBuildDuration(param)
         var time = getBuildTime(param)
         var rate = getBuildRate(param)
+        var mttr = getMTTR(param)
         var result = "组织：${param.organization}" + "\n" +
                 "项目：${param.project}  " + "\n" +
                 "仓库：${param.repositoryId}  " + "\n" +
@@ -66,7 +74,7 @@ class AzureDevopsApi {
                 "构建频率：$time 次 " + "\n" +
                 "平均构建时长：$duration 分钟 " + "\n" +
                 "构建成功率：$rate  " + "\n" +
-                "平均失败恢复时长：? 分钟 " + "\n"
+                "平均失败恢复时长：$mttr 分钟 " + "\n"
         return result
     }
 
