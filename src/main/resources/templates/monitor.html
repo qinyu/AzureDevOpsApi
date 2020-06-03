@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+    <title>CAC CI Monitor</title>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            letter-spacing: normal;
+            background-color: #f0f0f0;
+        }
+        #content{
+            width: 1050px;
+            padding: 40px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-left: 30px solid #1D81B6;
+            border-right: 1px solid #ddd;
+            box-shadow: 0px 0px 16px #aaa;
+        }
+        #table1{
+
+        }
+        #table1 thead th{
+            padding: 15px;
+            border: 1px solid #93CE37;
+            border-bottom: 3px solid #9ED929;
+            text-shadow: 1px 1px 1px #568F23;
+            color: #fff;
+            background-color: #9DD929;
+            border-radius: 5px 5px 0px 0px;
+        }
+        #table1 thead th:empty{
+            background-color: transparent;
+            border: none;
+        }
+        #table1 tbody th{
+            padding: 0px 10px;
+            border: 1px solid #93CE37;
+            border-right: 3px solid #9ED929;
+            color: #666;
+            background-color: #9DD929;
+            border-radius: 5px 0px 0px 5px;
+        }
+        #table1 tbody td{
+            padding: 10px;
+            border: 2px solid #E7EFE0;
+            text-align: center;
+            text-shadow: 1px 1px 1px #fff;
+            color: #666;
+            background-color: #DEF3CA;
+            border-radius: 2px;
+        }
+        #table1 tbody span.check::before{
+            content: url(images/check0.png);
+        }
+        #table1 tfoot td{
+            padding: 10px 0px;
+            font-size: 32px;
+            color: #9CD009;
+            text-align: center;
+            text-shadow: 1px 1px 1px #444;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+
+<div id="content">
+    <table id="table1">
+        <tr>
+        <tr>
+            <th>组织</th>
+            <th>项目</th>
+            <th>仓库</th>
+            <th>分支</th>
+            <th>构建状态</th>
+            <th>构建频率(次)</th>
+            <th>构建成功率</th>
+            <th>构建时长(分钟)</th>
+            <th>恢复时长(分钟)</th>
+        </tr>
+        </tr>
+        <tr th:each="monitor:${monitors}">
+            <td th:text="${monitor.organization}"></td>
+            <td th:text="${monitor.project}"></td>
+
+            <td th:text="${monitor.repo}" style="font-weight:bold;"></td>
+            <td th:text="${monitor.branch}"></td>
+            <td>
+                <div th:switch="${monitor.status}">
+                    <p th:case="'succeeded'">✅</p>
+                    <p th:case="'failed'}">❌</p>
+                </div>
+            </td>
+            <td th:text="${monitor.times}"></td>
+            <td th:text="${monitor.rate}"></td>
+            <td th:text="${monitor.times}"></td>
+            <td th:text="${monitor.recoveryTime}"></td>
+        </tr>
+
+    </table>
+</div>
+</body>
+</html>

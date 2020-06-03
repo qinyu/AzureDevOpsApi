@@ -1,19 +1,19 @@
-package com.cac.api.service
+package com.cac.api.service;
 
 import com.cac.api.data.AzureBuildLogic
+import com.cac.api.model.Monitor
 import com.cac.api.model.Params
 import com.cac.api.model.Result
 import com.cac.api.source.API
 import okhttp3.OkHttpClient
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
 @Controller
-class AzureDevopsApi {
+class MonitorController {
 
     private var api: API? = null
     private val BASE_URL = "https://dev.azure.com/"
@@ -32,42 +32,14 @@ class AzureDevopsApi {
         this.api = retrofit?.create(API::class.java)
     }
 
-    @ResponseBody
-    @RequestMapping("/build/duration")
-    fun getBuildDuration(param: Params): String {
-        var azureBuildLogic = AzureBuildLogic(getDataModel(param))
-        return azureBuildLogic.getDuration().toString()
-    }
 
-    @ResponseBody
-    @RequestMapping("/build/time")
-    fun getBuildTime(param: Params): String {
-        var azureBuildLogic = AzureBuildLogic(getDataModel(param))
-        return azureBuildLogic.getTimes().toString()
-    }
-
-    @ResponseBody
-    @RequestMapping("/build/rate")
-    fun getBuildRate(param: Params): String {
-        var azureBuildLogic = AzureBuildLogic(getDataModel(param))
-        return azureBuildLogic.getBuildSuccessRate().toString()
-    }
-
-    @ResponseBody
-    @RequestMapping("/build/mttr")
-    fun getMTTR(param: Params): String {
-        var azureBuildLogic = AzureBuildLogic(getDataModel(param))
-        return azureBuildLogic.getRecoveryTime().toString()
-    }
-
-    @ResponseBody
-    @RequestMapping("/build")
-    fun getBuild(param: Params): String {
+    @RequestMapping("/monitor")
+    fun index(model: Model, param: Params): String {
         val totalModel = getDataModel(param)
         val builds = totalModel.value.groupBy {
             it.repository
         }
-        var result = ""
+        var monitors = mutableListOf<Monitor>()
         builds.forEach {
             var dataModel = Result(it.value.size, it.value)
             var azureBuildLogic = AzureBuildLogic(dataModel)
@@ -75,19 +47,14 @@ class AzureDevopsApi {
             var time = azureBuildLogic.getTimes()
             var rate = azureBuildLogic.getBuildSuccessRate()
             var mttr = azureBuildLogic.getRecoveryTime()
-            result += "组织：${param.organization}" + "\n" +
-                    "项目：${param.project}  " + "\n" +
-                    "仓库：${dataModel.value.first().repository?.name}  " + "\n" +
-                    "分支：${param.branchName} " + "\n" +
-                    "当前构建状态：${dataModel.value.first().result} " + "\n" +
-                    "构建频率：$time 次 " + "\n" +
-                    "平均构建时长：$duration 分钟 " + "\n" +
-                    "构建成功率：$rate  " + "\n" +
-                    "平均失败恢复时长：$mttr 分钟 " + "\n" + "\n" + "\n"
+            var build = dataModel.value.first()
+            var monitor = Monitor(param.organization, param.project, build.repository?.name, param.branchName, build.result, duration, time, rate, mttr)
+            monitors.add(monitor)
         }
-
-        return result
+        model.addAttribute("monitors", monitors)
+        return "monitor"
     }
+
 
     private fun getDataModel(param: Params): Result {
         var result = api?.getAllBuilds(param.organization, param.project, param.version, param.branchName, param.repositoryId, param.repositoryType, param.minTime, param.maxTime)
@@ -98,6 +65,5 @@ class AzureDevopsApi {
         }
         return Result(0, mutableListOf())
     }
-
 
 }
