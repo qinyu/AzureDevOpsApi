@@ -12,6 +12,8 @@ interface API {
                      @Path("project") project: String,
                      @Query("api-version") version: String ,
                      @Query("branchName") branchName: String?,
+                     @Query("repositoryId") repositoryId: String?,
+                     @Query("repositoryType") repositoryType: String?,
                      @Query("minTime") minTime: String?,
                      @Query("maxTime") maxTime: String?): Call<Result>
 }
