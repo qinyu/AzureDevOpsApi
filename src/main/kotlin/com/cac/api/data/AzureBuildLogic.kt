@@ -5,6 +5,15 @@ import com.cac.api.model.Result
 
 class AzureBuildLogic(var result: Result) : BuildLogicSource {
 
+    init {
+        filterInProgressBuild()
+    }
+
+    private fun filterInProgressBuild() {
+        result.value = result.value.filter { it.isBuildFinish() }
+        result.count = result.value.size
+    }
+
     override fun getDuration(): Long {
         if (result.isEmpty()) {
             return 0
@@ -40,7 +49,7 @@ class AzureBuildLogic(var result: Result) : BuildLogicSource {
         }
         var rangList = mutableListOf<Range>()
         composeRange(rangList)
-        fillRangForFaildBuild(rangList)
+        fillRangForFailedBuild(rangList)
         var times = 0L
         rangList.forEach {
             times += it.successBuild!!.getFinishTime() - it.failedBuild!!.getFinishTime()
@@ -59,7 +68,7 @@ class AzureBuildLogic(var result: Result) : BuildLogicSource {
                 if (currentRange.failedBuild == null) {
                     currentRange.failedBuild = it
                 }
-            } else {
+            } else if (Result.SUCCESS == it.result) {
                 if (currentRange.failedBuild != null) {
                     currentRange.successBuild = it
                     rangList.add(currentRange)
@@ -69,7 +78,7 @@ class AzureBuildLogic(var result: Result) : BuildLogicSource {
         }
     }
 
-    private fun fillRangForFaildBuild(rangList: MutableList<Range>) {
+    private fun fillRangForFailedBuild(rangList: MutableList<Range>) {
         if (result.isFinishFailed()) {
             var range = Range()
             range.failedBuild = result.value.first()
@@ -77,8 +86,6 @@ class AzureBuildLogic(var result: Result) : BuildLogicSource {
             rangList.add(range)
         }
     }
-
-
 
 
 }

@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
-    <title>CAC CI Monitor</title>
+    <title>CAC@OPPO CI Monitor</title>
     <style type="text/css">
         *{
             margin: 0;
@@ -14,7 +14,7 @@
             background-color: #f0f0f0;
         }
         #content{
-            width: 1050px;
+            width: 600px;
             padding: 40px;
             margin: 0 auto;
             background-color: #fff;
@@ -77,10 +77,7 @@
     <table id="table1">
         <tr>
         <tr>
-            <th>组织</th>
-            <th>项目</th>
             <th>仓库</th>
-            <th>分支</th>
             <th>构建状态</th>
             <th>构建频率(次)</th>
             <th>构建成功率</th>
@@ -89,20 +86,18 @@
         </tr>
         </tr>
         <tr th:each="monitor:${monitors}">
-            <td th:text="${monitor.organization}"></td>
-            <td th:text="${monitor.project}"></td>
 
             <td th:text="${monitor.repo}" style="font-weight:bold;"></td>
-            <td th:text="${monitor.branch}"></td>
             <td>
-                <div th:switch="${monitor.status}">
+                <div th:switch="${monitor.result}">
                     <p th:case="'succeeded'">✅</p>
-                    <p th:case="'failed'}">❌</p>
+                    <p th:case="'failed'">❌</p>
+                    <p th:case="'canceled'">➖</p>
                 </div>
             </td>
-            <td th:text="${monitor.times}"></td>
+            <td th:text="${monitor.times}">
             <td th:text="${monitor.rate}"></td>
-            <td th:text="${monitor.times}"></td>
+            <td th:text="${monitor.duration}"></td>
             <td th:text="${monitor.recoveryTime}"></td>
         </tr>
 

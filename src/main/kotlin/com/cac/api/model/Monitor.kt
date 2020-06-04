@@ -5,7 +5,7 @@ data class Monitor(
         var project: String,
         var repo: String?,
         var branch: String?,
-        var status: String,
+        var result: String,
         var duration: Long,
         var times: Int,
         var rate: Float,
