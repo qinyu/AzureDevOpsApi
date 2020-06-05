@@ -2,6 +2,8 @@ package com.cac.api.data
 
 import com.cac.api.model.Range
 import com.cac.api.model.Result
+import java.text.NumberFormat
+
 
 class AzureBuildLogic(var result: Result) : BuildLogicSource {
 
@@ -39,7 +41,8 @@ class AzureBuildLogic(var result: Result) : BuildLogicSource {
                     Result.SUCCESS == it.result
                 }.count()
         var total = result.value.size
-        return successTime / total.toFloat()
+        var result = String.format("%.2f", successTime / total.toFloat())
+        return result.toFloat()
     }
 
 
