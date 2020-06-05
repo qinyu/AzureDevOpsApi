@@ -60,11 +60,16 @@ class MonitorController {
 
     private fun getDataModel(param: Params): Result {
         var result = api?.getAllBuilds(param.organization, param.project, param.version, param.branchName, param.repositoryId, param.repositoryType, param.minTime, param.maxTime)
-        var response = result?.execute()
+        try {
+            var response = result?.execute()
 
-        if (response?.body() != null) {
-            return response.body()!!
+            if (response?.body() != null) {
+                return response.body()!!
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+
         return Result(0, mutableListOf())
     }
 
