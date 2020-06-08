@@ -49,8 +49,10 @@ class MonitorController {
             var mttr = azureBuildLogic.getRecoveryTime()
             if (dataModel.value.isNotEmpty()) {
                 var build = dataModel.value.first()
-                var monitor = Monitor(param.organization, param.project, build.repository?.name, param.branchName, build.result, duration, time, rate, mttr)
-                monitors.add(monitor)
+                if (build.repository?.name != null) {
+                    var monitor = Monitor(param.organization, param.project, build.repository?.name, param.branchName, build.result, duration, time, rate, mttr)
+                    monitors.add(monitor)
+                }
             }
         }
         model.addAttribute("monitors", monitors)
