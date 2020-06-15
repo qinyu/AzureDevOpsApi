@@ -11,7 +11,7 @@ data class Result(var count: Int, var value: List<Build>) {
     }
 
     fun isFinishFailed(): Boolean {
-        return value.first().result == FAILED
+        return value.first().result != SUCCESS
     }
 
     fun isEmpty(): Boolean {

@@ -52,7 +52,7 @@ class AzureBuildLogic(var result: Result) : BuildLogicSource {
         }
         var rangList = mutableListOf<Range>()
         composeRange(rangList)
-        fillRangForFailedBuild(rangList)
+//        fillRangForFailedBuild(rangList)
         var times = 0L
         rangList.forEach {
             times += it.successBuild!!.getFinishTime() - it.failedBuild!!.getFinishTime()
@@ -67,7 +67,7 @@ class AzureBuildLogic(var result: Result) : BuildLogicSource {
     private fun composeRange(rangList: MutableList<Range>) {
         var currentRange = Range()
         result.value.asReversed().forEach {
-            if (Result.FAILED == it.result) {
+            if (Result.SUCCESS != it.result) {
                 if (currentRange.failedBuild == null) {
                     currentRange.failedBuild = it
                 }

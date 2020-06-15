@@ -13,7 +13,9 @@ data class Build(var buildNumber: String,
                  var url: String,
                  var repository: Repository?) {
 
-    constructor(buildNumber: String, result: String, startTime: String,
+    constructor(buildNumber: String,
+                result: String,
+                startTime: String,
                 finishTime: String) : this(buildNumber, "", result, "", startTime, finishTime, "", null)
 
     private fun getDataFromUTC(time: String?): Long {

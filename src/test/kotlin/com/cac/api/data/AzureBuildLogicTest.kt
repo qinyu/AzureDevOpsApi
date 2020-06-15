@@ -110,8 +110,7 @@ class AzureBuildLogicTest {
         expectedTimes += builds[7].getFinishTime() - builds[8].getFinishTime()
         expectedTimes += builds[3].getFinishTime() - builds[5].getFinishTime()
         expectedTimes += builds[1].getFinishTime() - builds[2].getFinishTime()
-        expectedTimes += result.createCurrentBuild().getFinishTime() - builds[0].getFinishTime()
-        var averageTimes = expectedTimes / Result.MINUTES / 4
+        var averageTimes = expectedTimes / Result.MINUTES / 3
         val azureBuildLogic = AzureBuildLogic(result)
         val resultTimes = azureBuildLogic.getRecoveryTime()
         Assert.assertTrue(averageTimes == resultTimes)
@@ -156,7 +155,7 @@ class AzureBuildLogicTest {
         var builds = mutableListOf<Build>()
         repeat(9) { i ->
             when (i) {
-                0 -> builds.add(Build(i.toString(), Result.FAILED, "2020-06-1T07:23:10.6767296Z", "2020-06-1T07:36:15.9806247Z"))
+                0 -> builds.add(Build(i.toString(), Result.FAILED, "2020-06-1T07:23:10.6767296Z", "2020-06-10T07:36:15.9806247Z"))
                 1 -> builds.add(Build(i.toString(), Result.SUCCESS, "2020-06-09T07:23:10.6767296Z", "2020-06-09T07:36:15.9806247Z"))
                 2 -> builds.add(Build(i.toString(), Result.FAILED, "2020-06-08T07:23:11.6767296Z", "2020-06-08T07:36:15.9806247Z"))
                 3 -> builds.add(Build(i.toString(), Result.SUCCESS, "2020-06-07T07:23:12.6767296Z", "2020-06-07T07:36:15.9806247Z"))
